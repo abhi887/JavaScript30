@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+  
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  var fetched_data=[];
+  fetch(endpoint)
+  .then(response=>data=response.json())
+  .then(dat=>{fetched_data.push(...dat);});
+
+  const searchInp=document.querySelector(".search");
+  searchInp.addEventListener('keyup',searcher);
+  
+  function searcher(){
+    let keyWord=this.value;
+    var searchRes=[];
+    var domNodes=[];
+    var lists = document.querySelector(".suggestions");
+    
+    lists.innerHTML="";
+    
+    searchRes=(window.fetched_data).filter((obj)=>{
+      var regex = new RegExp(keyWord, 'gi');
+       return (obj.state).match(regex) || (obj.city).match(regex)
+    })
+
+    domNodes=searchRes.map((obj)=>{
+      var regex = new RegExp(keyWord, 'gi');
+      let li;
+        li=`
+        <li>
+        <span class="name">
+            ${(obj.city).replace(regex,`<span class='hl'>${keyWord}</span>`)}, 
+            ${(obj.state).replace(regex,`<span class='hl'>${keyWord}</span>`)}
+        </span>
+        <span class="population">${addCommas(obj.population)}</span>
+        </li>
+        `;
+      return li;
+    })
+    if(domNodes.length>0){lists.innerHTML=domNodes.join("");}
+  }
+
+  function addCommas(input){
+    let arr=input.split("");
+    var cnt=1;
+    let tmp=[];
+    var comm=[];
+    for(let i=arr.length-1;i>=0;i--){
+      if(cnt<=4){
+        tmp.push(arr[i]);
+        cnt+=1
+      }
+      if(cnt==4 || i==0){
+        i==0 ? comm.push(tmp.reverse().join("")) : comm.push(tmp.reverse().join(""),",");
+        tmp=[];
+        cnt=1;
+      }
+    }
+    return comm.reverse().join("");
+  }
+</script>
+</body>
+</html>
