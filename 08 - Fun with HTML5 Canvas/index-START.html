@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+&nbsp;<span><em>click anywhere and wave your cursor !</em></span>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+  const canvas = document.querySelector("#draw");
+  const ctx = canvas.getContext("2d");
+  
+  var toDraw=false;
+  var increaseSize=false;
+  var hue = 0;
+  var size=100;
+
+  ctx.lineJoin="round";
+  ctx.lineCap = 'round';
+
+  var mouse = {x:'',y:''};
+  canvas.addEventListener('mousemove', function(e) {
+    
+    if(toDraw){
+      ctx.beginPath();
+      ctx.moveTo(mouse.x,mouse.y);
+      
+      ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+      ctx.lineWidth=size;
+
+      ctx.lineTo(e.offsetX,e.offsetY);
+      ctx.stroke();
+      mouse.x = e.offsetX;
+      mouse.y = e.offsetY;
+      
+      hue++;
+      if (hue >= 360) {
+        hue = 0;
+      }
+      
+      if(size<=0) increaseSize = true;
+      if(size>=100) increaseSize = false;
+      increaseSize ? size++ : size--;
+
+    }
+  });
+  
+  canvas.addEventListener('mousedown',(e)=>{
+    if(!toDraw) toDraw=true;
+    mouse.x = e.offsetX;
+    mouse.y = e.offsetY;
+  })
+
+  canvas.addEventListener('mouseup',()=>{ if(toDraw) toDraw=false; });
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+  span{
+    position:sticky;
+    z-index: 1;
+  }
+</style>
+
+</body>
+</html>
