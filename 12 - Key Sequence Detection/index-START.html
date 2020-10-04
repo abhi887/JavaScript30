@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+  var keyArray = new Array();
+  let cornified=false
+  document.addEventListener('keydown',(e)=>{
+    keyArray.push(e.key);
+    console.log(keyArray);
+    if(keyArray.join("").includes("abhishek") && !cornified ){
+      cornify_add();
+      cornified=true;
+      console.log("You found the SECRET !!!")
+    }
+  })
+</script>
+</body>
+</html>
